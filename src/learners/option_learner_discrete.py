@@ -366,24 +366,32 @@ class OptionDiscreteLearner:
 
 
     def _update_targets_soft(self, tau):
-        for target_param, param in zip(self.target_mac.parameters(), self.mac.parameters()):
+        for target_param, param in zip(self.target_opt_mac.parameters(), self.opt_mac.parameters()):
             target_param.data.copy_(target_param.data * (1.0 - tau) + param.data * tau)
 
-        for target_param, param in zip(self.target_critic.parameters(), self.critic.parameters()):
+        for target_param, param in zip(self.target_opt_critic.parameters(), self.opt_critic.parameters()):
+            target_param.data.copy_(target_param.data * (1.0 - tau) + param.data * tau)
+
+        for target_param, param in zip(self.target_act_mac.parameters(), self.act_mac.parameters()):
+            target_param.data.copy_(target_param.data * (1.0 - tau) + param.data * tau)
+
+        for target_param, param in zip(self.target_act_critic.parameters(), self.act_critic.parameters()):
             target_param.data.copy_(target_param.data * (1.0 - tau) + param.data * tau)
 
         if self.mixer is not None:
-            for target_param, param in zip(self.target_mixer.parameters(), self.mixer.parameters()):
+            for target_param, param in zip(self.target_opt_mixer.parameters(), self.opt_mixer.parameters()):
                 target_param.data.copy_(target_param.data * (1.0 - tau) + param.data * tau)
 
         if self.args.verbose:
             self.logger.console_logger.info("Updated all target networks (soft update tau={})".format(tau))
 
     def _update_targets(self):
-        self.target_mac.load_state(self.mac)
-        self.target_critic.load_state_dict(self.critic.state_dict())
-        if self.mixer is not None:
-            self.target_mixer.load_state_dict(self.mixer.state_dict())
+        self.target_opt_mac.load_state(self.opt_mac)
+        self.target_act_mac.load_state(self.act_mac)
+        self.target_opt_critic.load_state_dict(self.opt_critic.state_dict())
+        self.target_act_critic.load_state_dict(self.opt_critic.state_dict())
+        if self.opt_mixer is not None:
+            self.target_opt_mixer.load_state_dict(self.opt_mixer.state_dict())
         self.logger.console_logger.info("Updated all target networks")
 
     def cuda(self, device="cuda:0"):
