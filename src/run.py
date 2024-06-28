@@ -18,7 +18,7 @@ from runners import REGISTRY as r_REGISTRY
 from controllers import REGISTRY as mac_REGISTRY
 from components.episode_buffer import ReplayBuffer
 from components.transforms import OneHot
-
+import wandb
 
 def run(_run, _config, _log, pymongo_client=None):
 
@@ -95,21 +95,41 @@ def run_sequential(args, logger):
         args.n_actions = env_info["n_actions"]
         args.state_shape = env_info["state_shape"]
         args.obs_shape = env_info["obs_shape"]
-
-        scheme = {
-            "state": {"vshape": env_info["state_shape"]},
-            "obs": {"vshape": env_info["obs_shape"], "group": "agents"},
-            "actions": {"vshape": (1,), "group": "agents", "dtype": th.long},
-            "avail_actions": {"vshape": (env_info["n_actions"],), "group": "agents", "dtype": th.int},
-            "reward": {"vshape": (1,)},
-            "terminated": {"vshape": (1,), "dtype": th.uint8},
-        }
-        groups = {
-            "agents": args.n_agents
-        }
-        preprocess = {
-            "actions": ("actions_onehot", [OneHot(out_dim=args.n_actions)])
-        }
+        
+        if args.name.startswith("option"):
+            args.n_options = args.num_options
+            scheme = {
+                "state": {"vshape": env_info["state_shape"]},
+                "obs": {"vshape": env_info["obs_shape"], "group": "agents"},
+                "actions": {"vshape": (1,), "group": "agents", "dtype": th.long},
+                "options": {"vshape": (1,), "group": "agents", "dtype": th.long},
+                "avail_actions": {"vshape": (env_info["n_actions"],), "group": "agents", "dtype": th.int},
+                "reward": {"vshape": (1,)},
+                "terminated": {"vshape": (1,), "dtype": th.uint8},
+                "high_termination": {"vshape": (1,), "dtype": th.uint8},
+            }
+            groups = {
+                "agents": args.n_agents
+            }
+            preprocess = {
+                "actions": ("actions_onehot", [OneHot(out_dim=args.n_actions)]),
+                "options": ("options_onehot", [OneHot(out_dim=args.n_options)])
+            }
+        else:
+            scheme = {
+                "state": {"vshape": env_info["state_shape"]},
+                "obs": {"vshape": env_info["obs_shape"], "group": "agents"},
+                "actions": {"vshape": (1,), "group": "agents", "dtype": th.long},
+                "avail_actions": {"vshape": (env_info["n_actions"],), "group": "agents", "dtype": th.int},
+                "reward": {"vshape": (1,)},
+                "terminated": {"vshape": (1,), "dtype": th.uint8},
+            }
+            groups = {
+                "agents": args.n_agents
+            }
+            preprocess = {
+                "actions": ("actions_onehot", [OneHot(out_dim=args.n_actions)])
+            }
     else:
         env_info = runner.get_env_info()
         args.n_agents = env_info["n_agents"]
@@ -201,14 +221,25 @@ def run_sequential(args, logger):
                           preprocess=preprocess,
                           device="cpu" if args.buffer_cpu_only else args.device)
 
-    # Setup multiagent controller here
-    mac = mac_REGISTRY[args.mac](buffer.scheme, groups, args)
+    if args.name.startswith("option"):
+        # Setup multiagent controller here
+        act_mac = mac_REGISTRY[args.act_mac](buffer.scheme, groups, args)
+        opt_mac = mac_REGISTRY[args.opt_mac](buffer.scheme, groups, args)
+        # Give runner the scheme
+        runner.setup(scheme=scheme, groups=groups, preprocess=preprocess, opt_mac=opt_mac, act_mac=act_mac)
+        # Learner
+        learner = le_REGISTRY[args.learner](opt_mac, act_mac, buffer.scheme, logger, args)
+    
+    
+    else:
+        # Setup multiagent controller here
+        mac = mac_REGISTRY[args.mac](buffer.scheme, groups, args)
 
-    # Give runner the scheme
-    runner.setup(scheme=scheme, groups=groups, preprocess=preprocess, mac=mac)
+        # Give runner the scheme
+        runner.setup(scheme=scheme, groups=groups, preprocess=preprocess, mac=mac)
 
-    # Learner
-    learner = le_REGISTRY[args.learner](mac, buffer.scheme, logger, args)
+        # Learner
+        learner = le_REGISTRY[args.learner](mac, buffer.scheme, logger, args)
 
     if args.use_cuda:
         learner.cuda()
@@ -256,6 +287,24 @@ def run_sequential(args, logger):
     last_time = start_time
 
     logger.console_logger.info("Beginning training for {} timesteps".format(args.t_max))
+
+    project_name = args.env_args['map_name']
+    if args.env_args["reward_sparse"]:
+        project_name += "_real_sparse"
+    elif not args.env_args['reward_only_positive']:
+        project_name += "_semi_sparse_0628"
+    else:
+        project_name += "_dense"
+
+    if args.name.startswith("option"):
+        run_name = args.name
+        run_name += "_discri_" + str(args.use_discriminator) + "_" + str(args.lam_discri)
+        run_name += "_mi_" + str(args.use_mi) + "_" + str(args.lam_mi)
+        run_name += "_interval_" + str(args.option_interval)
+    else:
+        run_name = args.name
+
+    wandb.init(project = project_name, name = run_name)
 
     while runner.t_env <= args.t_max:
 
@@ -323,6 +372,7 @@ def run_sequential(args, logger):
         if (runner.t_env - last_log_T) >= args.log_interval:
             logger.log_stat("episode", episode, runner.t_env)
             logger.print_recent_stats()
+            wandb.log({"test_battle_won_mean": logger.stats["test_battle_won_mean"][-1][-1]}, step=runner.t_env)
             last_log_T = runner.t_env
 
     runner.close_env()

@@ -1,0 +1,1 @@
+{"opt_critic_loss": 0.04408639669418335, "_timestamp": 1719564040.2628336, "act_critic_loss": 1.35138738155365, "opt_pg_loss": -0.1820666342973709, "act_pg_loss": -3.134563684463501, "discri_loss": 1.032793402671814, "mi_loss": 0.6551814675331116, "tot_discri_loss": 1.6879749298095703, "_runtime": 92.03897261619568, "_step": 2057, "test_battle_won_mean": 0.0}

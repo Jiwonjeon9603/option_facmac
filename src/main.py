@@ -77,13 +77,32 @@ if __name__ == '__main__':
     # Get the defaults from default.yaml
     with open(os.path.join(os.path.dirname(__file__), "config", "default.yaml"), "r") as f:
         try:
-            config_dict = yaml.load(f)
+            config_dict = yaml.load(f, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
             assert False, "default.yaml error: {}".format(exc)
 
     # Load algorithm and env base configs
     env_config = _get_config(params, "--env-config", "envs")
     alg_config = _get_config(params, "--config", "algs")
+    
+        ########################## With debugging in vscode ##################
+    with open(
+        os.path.join(os.path.dirname(__file__), "config/envs", "sc2.yaml"), "r"
+    ) as f:
+        try:
+            env_config = yaml.full_load(f)
+        except yaml.YAMLError as exc:
+            assert False, "default.yaml error: {}".format(exc)
+
+    with open(
+        os.path.join(os.path.dirname(__file__), "config/algs", "option_smac.yaml"), "r"
+    ) as f:
+        try:
+            alg_config = yaml.full_load(f)
+        except yaml.YAMLError as exc:
+            assert False, "default.yaml error: {}".format(exc)
+    #####################################################################
+
     # config_dict = {**config_dict, **env_config, **alg_config}
     config_dict = recursive_dict_update(config_dict, env_config)
     config_dict = recursive_dict_update(config_dict, alg_config)
@@ -93,7 +112,22 @@ if __name__ == '__main__':
 
     # Save to disk by default for sacred
     logger.info("Saving to FileStorageObserver in results/sacred.")
-    file_obs_path = os.path.join(results_path, "sacred")
+
+    if config_dict["env"] == "sc2":
+        env_name = config_dict["env_args"]["map_name"]
+        if config_dict["env_args"]["reward_sparse"]:
+            env_name += "_real_sparse"
+        elif config_dict["env_args"]["reward_only_positive"] == False:
+            env_name += "_semi_sparse_0628"
+        else:
+            env_name += "_dense"
+
+
+    second_name = "discri_" + str(config_dict["use_discriminator"]) + "_"+ str(config_dict["lam_discri"])
+    second_name += "_mi_" + str(config_dict["use_mi"]) + "_" + str(config_dict["lam_mi"])
+    second_name += "_interval_" + str(config_dict["option_interval"])
+
+    file_obs_path = os.path.join(results_path, f"sacred/{env_name}/{config_dict['name']}_{second_name}",)
     ex.observers.append(FileStorageObserver.create(file_obs_path))
 
     ex.run_commandline(params)
