@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=5 python3 src/main.py

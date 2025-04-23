@@ -1,0 +1,276 @@
+{
+    "os": "Linux-4.15.0-213-generic-x86_64-with-glibc2.17",
+    "python": "3.8.19",
+    "heartbeatAt": "2025-04-23T19:23:21.569159",
+    "startedAt": "2025-04-23T19:23:20.678182",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "src/main.py",
+    "codePathLocal": "src/main.py",
+    "codePath": "src/main.py",
+    "git": {
+        "remote": "https://github.com/Jiwonjeon9603/option_facmac.git",
+        "commit": "616226b77ab9178b9a1773bd1823e74bad41be4f"
+    },
+    "email": "hy.nam@kaist.ac.kr",
+    "root": "/home/wisrl/jwjeon/option_facmac",
+    "host": "itl-Sim13",
+    "username": "wisrl",
+    "executable": "/home/wisrl/anaconda3/envs/jwjeon_option/bin/python3",
+    "cpu_count": 20,
+    "cpu_count_logical": 40,
+    "cpu_freq": {
+        "current": 1491.3534000000004,
+        "min": 1200.0,
+        "max": 3400.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 1246.079,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1249.953,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1202.965,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1204.17,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1205.233,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1203.361,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1213.573,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1204.087,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1258.372,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.232,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2974.899,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1266.678,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.901,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2985.757,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.529,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.598,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1889.095,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2399.934,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1203.242,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1958.95,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.687,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.56,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.818,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1199.998,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.089,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.888,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1242.542,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.2,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1239.026,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1199.999,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2958.719,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1279.23,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1201.561,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2902.036,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1201.329,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1201.718,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2145.967,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2399.676,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1200.125,
+            "min": 1200.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2033.086,
+            "min": 1200.0,
+            "max": 3400.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 878.620922088623,
+            "used": 715.1589775085449
+        }
+    },
+    "gpu": "NVIDIA TITAN Xp",
+    "gpu_count": 8,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA TITAN Xp",
+            "memory_total": 12884901888
+        },
+        {
+            "name": "NVIDIA TITAN Xp",
+            "memory_total": 12884901888
+        },
+        {
+            "name": "NVIDIA TITAN Xp",
+            "memory_total": 12884901888
+        },
+        {
+            "name": "NVIDIA TITAN Xp",
+            "memory_total": 12884901888
+        },
+        {
+            "name": "NVIDIA TITAN Xp",
+            "memory_total": 12884901888
+        },
+        {
+            "name": "NVIDIA TITAN Xp",
+            "memory_total": 12884901888
+        },
+        {
+            "name": "NVIDIA TITAN Xp",
+            "memory_total": 12884901888
+        },
+        {
+            "name": "NVIDIA TITAN Xp",
+            "memory_total": 12884901888
+        }
+    ],
+    "memory": {
+        "total": 236.04095458984375
+    }
+}
