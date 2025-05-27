@@ -95,7 +95,7 @@ if __name__ == '__main__':
             assert False, "default.yaml error: {}".format(exc)
 
     with open(
-        os.path.join(os.path.dirname(__file__), "config/algs", "option_smac.yaml"), "r"
+        os.path.join(os.path.dirname(__file__), "config/algs", "facmac_smac.yaml"), "r"
     ) as f:
         try:
             alg_config = yaml.full_load(f)
@@ -123,11 +123,7 @@ if __name__ == '__main__':
             env_name += "_dense"
 
 
-    second_name = "discri_" + str(config_dict["use_discriminator"]) + "_"+ str(config_dict["lam_discri"])
-    second_name += "_mi_" + str(config_dict["use_mi"]) + "_" + str(config_dict["lam_mi"])
-    second_name += "_interval_" + str(config_dict["option_interval"])
-
-    file_obs_path = os.path.join(results_path, f"sacred/{env_name}/{config_dict['name']}_{second_name}",)
+    file_obs_path = os.path.join(results_path, f"sacred/{env_name}/{config_dict['name']}",)
     ex.observers.append(FileStorageObserver.create(file_obs_path))
 
     ex.run_commandline(params)
